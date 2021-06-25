@@ -1,3 +1,6 @@
+import numpy as np
+# import csv
+
 class kakurasu:
     def __init__(self, weight):
         '''
@@ -34,10 +37,17 @@ class kakurasu:
                 yield [[int(ch) for ch in '{0:0{width}b}'.format(row, width=self.length)] for row in ret]
             else:
                 break
+    
+    def sol2prob(self, sol):
+        temp = np.multiply(sol, self.weight)
+        return (np.sum(temp, axis=0), np.sum(temp, axis=1))
 
 if __name__ == '__main__':
-    test = kakurasu([[0]*4 for _ in range(4)])
+    weight = [[1,1,2,2],[1,1,2,2],[2,2,1,1],[2,2,1,1]]
+    test = kakurasu(weight)
     gen = test.genPorblem()
-    for i in range(10):
-        print(next(gen))
-
+    with open("data.csv", "ab") as f:
+        while True:
+            f.write(b"\n")
+            data = test.sol2prob(next(gen))
+            np.savetxt(f, data, fmt='%i', delimiter=',')
